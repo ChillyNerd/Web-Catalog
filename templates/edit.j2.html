@@ -1,0 +1,108 @@
+{% extends "base.j2.html" %}
+{% block main %}
+
+<h4>Edit Location</h4>
+
+<div class="py-3">
+  <p>ID: {{loc.id}}</p>  
+
+  <form method="post">
+  <div class="form-group">
+    <label class="form-label" for="description-input">Description</label>
+    <input class="form-input" id="description-input" name="description-input" type="text" placeholder="Description of location" value="{% if loc.description != "" %}{{loc.description}}{% endif %}" />
+    <p class="form-input-hint">Examples: <i>I.T. Equipment, Toys, Books</i></p>
+  </div>           
+  <div class="form-group">
+    <label class="form-label" for="location-input">Where it is</label>
+    <input class="form-input" id="location-input" name="location-input" type="text" placeholder="Where is this storage location?" value="{% if loc.location != "" %}{{loc.location}}{% endif %}" />
+    <p class="form-input-hint">Examples: <i>Kitchen, Office, Garage, Beach House Ensuite</i></p>
+  </div>  
+  <div class="form-group">
+    <label class="form-switch">
+      <input type="checkbox" name="sealed" {% if loc.sealed %}checked=""{% endif %}>
+      <i class="form-icon"></i> Location is sealed or closed.
+    </label>
+  </div>
+  <div class="pt-3">
+    <h4 class="mt-5">Stored Items</h4>
+    <div id="item-list">
+      {% for item in loc['items'] | sort %}<div class="item"><span>{{item}} <a id="remove" href="#" onclick="remove(this); return false;">&#10006;</a></span></div>{% endfor %}        
+    </div>              
+    <div class="my-3 pb-5">
+      <div class="input-group">
+        <input type="text" class="form-input" name="add-item-input" id="add-item-input" placeholder="New item description">
+        <button class="btn btn-primary input-group-btn" id="add-item-button">Add Item</button>
+      </div> 
+    </div>              
+  </div> 
+
+  <div class="columns pt-5">
+    <div class="column" id="not-delete-buttons">
+      <button type="submit" class="btn btn-primary primary">Save</button>
+      <button type="button" class="btn cancel-button" onclick="location.href='{{url_for('view', url_id=loc.id)}}'">Cancel</button>
+    </div>
+    <div class="column col-auto">  
+      <button id="delete-button" type="button" class="btn btn-error">Delete</button>
+    </div>
+  </div>
+
+  </form>
+</div>  
+
+<script>
+  function remove(el) {
+    var element = el;
+    element.parentNode.parentNode.remove();
+  }      
+  
+  $("#add-item-button").click(function(event){
+    event.preventDefault();
+    if ($("#add-item-input").val() != ""){       
+      $("#item-list").append('<div class="item"><span>' + $("#add-item-input").val() + '<a id="remove" href="#" onclick="remove(this); return false;">&#10006;</a></span></div>')
+      $("#add-item-input").val("")
+      $("#add-item-input").focus();
+    }                
+  });
+  $("#add-item-input").keyup(function(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      $("#add-item-button").click();
+    }
+  });
+            
+  function make_item_list(){
+    lst = [];
+    $(".item").each(function(){ lst.push($(this).text().replace('✖','')); });
+    return lst;
+  }      
+
+  $("form").bind("keypress", function (e) {
+    if (e.keyCode == 13) {
+      return false;
+    }
+  });
+
+  $("form").submit( function(ev){
+    $("#add-item-button").click();
+    console.log(make_item_list())
+    $("<input />").val(JSON.stringify(make_item_list())).attr({"type": "hidden", "name": "items-list", "id": "items-list"}).appendTo("form")
+  })
+
+  $("#delete-button").click(function(){
+    if ($(this).text() == "Confirm Deletion?"){ location.href='{{url_for('delete', url_id=loc.id)}}' }
+    if ($(this).text() == "Delete"){ 
+      $("#not-delete-buttons button").hide();
+      $(this).text("Confirm Deletion?"); 
+      setTimeout(function(){ 
+        $('#delete-button').text("Delete");       
+        $("#not-delete-buttons button").show();
+      }, 2000) 
+    }      
+  })
+
+  $("#fullness-input").change(function(){
+    $("#fullness-numeric").text($(this).val());
+  })
+
+</script>
+{% endblock %}

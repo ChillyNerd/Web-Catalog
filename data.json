@@ -1,0 +1,23 @@
+{
+    "NWR444": {
+        "id": "NWR444",
+        "description": "First Project",
+        "location": "Long description Long description Long descriptionLong description Long descriptionLong descriptionLong description Long descriptionLong descriptionLong description Long descriptionLong descriptionLong description",
+        "items": [
+            "IT",
+            "Data Science"
+        ],
+        "last_change": 1704871375.8144321,
+        "sealed": false
+    },
+    "RPZ169": {
+        "id": "RPZ169",
+        "description": "Second project",
+        "location": "blablabla blablabla blablablablablabla blablablablablablablablabla blablablablablabla blablabla blablabla",
+        "items": [
+            "Something"
+        ],
+        "last_change": 1704871486.7671027,
+        "sealed": false
+    }
+}

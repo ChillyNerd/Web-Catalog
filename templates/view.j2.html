@@ -1,0 +1,53 @@
+{% extends "base.j2.html" %}
+{% block main %}
+
+<h4>{% if loc.description != "" %}{{loc.description}}{% else %}Un-named Location - <a href="{{url_for('edit', url_id=loc.id)}}">Edit</a> this!{% endif %}{% if loc.sealed %} <small class="label ml-3">Sealed</small> {% endif %}</h4>
+
+<div class="py-3">
+  <p>ID: {{loc.id}}</p>  
+  
+    {% if loc.location == "" %}<p>No Location - <a href="{{url_for('edit', url_id=loc.id)}}">Edit</a> this!</p>{% endif %}
+    {% if loc.location != "" %}<p>{{loc.location}}</p>{% endif %}
+  
+  <div class="my-3 mt-5">
+    {% if loc.sealed %}<p>Location is sealed or closed.</p>{% endif %}
+  </div>
+
+  <div class="py-3">
+    <h4 class="mt-5">{{loc['items'] | length}} Stored Item{% if loc['items'] | length != 1 %}s{%endif%}</h4>
+    {% if loc['items'] | length %}
+      {% for item in loc['items'] | sort %}<div class="item"><span>{{item}}</span></div>{% endfor %}   
+    {% else %}
+    <p>No items yet. <a href="{{url_for('edit', url_id=loc.id)}}">Edit</a> to add some!</p>
+    {% endif %}   
+  </div> 
+
+  <div class="py-5">
+    <small>Location Last Updated: <i>{{loc.last_change}}</i></small>
+  </div>
+
+  <div class="my-3 mt-5">
+    <button id="edit-button" class="btn btn-primary" onclick="location.href='{{url_for('edit', url_id=loc.id)}}'">Edit</button>
+  </div>
+  <div class="my-3">
+    {% if from_search %}
+    <button class="btn" onclick="history.back()">Back to Text Search Results</button>
+    {% endif %}
+  </div>  
+</div>  
+
+
+<script>    
+
+  $("html").bind("keypress", function (e) {
+    // console.log(e.keyCode)
+    if (e.keyCode == 101 || e.keyCode == 69) {
+      // "E" or "e"
+      $("#edit-button").click()
+      return false;
+    }
+  });
+
+</script>
+
+{% endblock %}

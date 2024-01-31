@@ -1,0 +1,46 @@
+{% extends "base.j2.html" %}
+{% block login_error_printpage %}
+<style>
+
+  #flex_centerer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  #centered {
+    display: inline-box;
+    margin: 5px;
+    text-align: center;
+    /* border: 1px solid #333; */
+    padding: 1em;
+  }
+  /* Login bage styles */
+  .thin {
+    max-width: 350px;
+  }
+  .form-group {
+    margin: 0.35em 0 0.7em;
+  }
+</style>
+<div id="flex_centerer">
+  <div id="centered">
+    <div class="">
+      <h2 class="">{{error.name}}</h2>      
+      <fieldset>
+        <legend>ERROR: {{error.code}}</legend>
+        <pre>{{error.description | replace("<br/>", "\n")}}</pre>          
+        <p><button class="btn btn-primary" onclick="location.href='{{url_for('list_locs')}}'">Location List</button></p>      
+      </fieldset>  
+    </div>    
+    <small class="">Git Revision: <span title="Commit Message: {{git_revision.subject}}">{{git_revision.hash}} ({{git_revision.timestamp}})</span>{% if git_revision.modified %} - MODIFIED{% endif %}</small> 
+  </div>
+</div>
+<script>
+  $(document).prop('title', $(document).prop('title') + " - Error {{error.code}}");
+  $(".off-canvas").hide();
+</script>
+{% endblock %}
+{% block footer %}{% endblock %}
